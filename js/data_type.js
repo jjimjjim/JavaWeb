@@ -27,7 +27,7 @@ console.log(obj1, obj2, airline); // 여러 개 출력
 const users = new Map(); 
 users.set("user1",{id: 2, password: "password456"}); //사용자 정보 추가
 
-//map 객체의 모든 사용자 정보 반복 출력력
+//map 객체의 모든 사용자 정보 반복 출력
 for(const [username, user] of users)
 {
     console.log('사용자 이름: ${username}', 'ID: ${user.id}');

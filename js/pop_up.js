@@ -25,4 +25,15 @@ function show_clock(){
     }
     setTimeout(show_clock, 1000);  //1초마다갱신
    }
-   
+// //바뀌는 애
+// function over(obj) {
+//     obj.src="image/kkp.png";
+// }
+// //원본
+function out(obj) {
+    obj.src="image/kakaopage.png";
+}
+
+const over = (obj) => {
+    obj.src = "image/kkp.png";
+};

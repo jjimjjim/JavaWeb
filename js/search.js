@@ -4,11 +4,10 @@ document.getElementById("search_btn_msg").addEventListener("click", search_messa
  }
 
 // 두 번째 함수 정의 (같은 이름 - 중첩 확인용)
-function search_message() {
-    let msg = "검색을 수행합니다.";
-    alert(msg);
-}
-
+// function search_message() {
+//     let msg = "검색을 수행합니다.";
+//     alert(msg);
+// }
 function wordcheck(word, list){
     word = word.trim();
     for(let i = 0; i < list.length; i++) {
@@ -37,7 +36,7 @@ function googleSearch() {
         alert("유해 단어입니다. 검색할 수 없습니다.");
         return false;
     }
-    
+
      // 새 창에서 구글 검색을 수행
     window.open(googleSearchUrl, "_blank"); // 새로운 창에서 열기.
      return false;
