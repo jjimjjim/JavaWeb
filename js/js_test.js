@@ -19,3 +19,6 @@ var jb = 'hi'; // 변수 선언 후 주석 가능(한줄 주석)
     //e = 5;
     //const f // Error?
     console.log(e);
+
+    //const는는 변하지 않는 값을 쓸때!
+    //let은 변할 수 있는 값!
