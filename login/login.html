@@ -9,6 +9,7 @@
         <meta name="keywords" content="computer">
         <link rel="stylesheet" href="../css/login.css">
         <script type="text/javascript" src="/js/login.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.6/purify.min.js" integrity="sha512-YlctBG9PGZIhh9keoqI3eZkQM9T8QUbiBi7qNYAO/TUEo8jqWX5pLp5+x1cKRQDRzJ/lyGyJ9WUVNIRduxIIFw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     </head>
 
     <section class="vh-100 gradient-custom">
@@ -20,7 +21,7 @@
       
                   <div class="mb-md-5 mt-md-4 pb-5">
                     <!-- get방식 전송 -->
-                    <form method="get" action="/login/index_login.html">
+                    <form method="get" id="login_form" action="/login/index_login.html">
                         <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
                         <p class="text-white-50 mb-5">Please enter your login and password!</p>
                             <div data-mdb-input-init class="form-outline form-white mb-4">
