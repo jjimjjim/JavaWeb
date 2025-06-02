@@ -1,3 +1,78 @@
+// 전역 쿠키 설정 함수 (이미 정의되어 있던 코드)
+function setCookie(name, value, days) {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+}
+
+function getCookie(name) {
+    const cookies = document.cookie.split("; ");
+    for (let i = 0; i < cookies.length; i++) {
+        const [cookieName, cookieValue] = cookies[i].split("=");
+        if (cookieName === name) {
+            return decodeURIComponent(cookieValue);
+        }
+    }
+    return null;
+}
+
+//실패 횟수 쿠키 저장 및 제한 함수
+function login_failed() {
+    let failCount = parseInt(getCookie("login_fail_cnt")) || 0;
+    failCount += 1;
+
+    setCookie("login_fail_cnt", failCount, 1); // 하루 저장
+
+    // 상태 출력
+const statusDiv = document.getElementById("login_status");
+    if (failCount >= 3) {
+        statusDiv.innerText = `로그인 실패 횟수: ${failCount}회. 로그인 가능 횟수 초과.`;
+        document.getElementById("login_btn").disabled = true;
+    } else {
+        statusDiv.innerText = `로그인 실패 횟수: ${failCount}회`;
+    }
+}
+    //로그인 시도 제한 확인 함수
+function check_login_block() {
+    let failCount = parseInt(getCookie("login_fail_cnt")) || 0;
+    const statusDiv = document.getElementById("login_status");
+
+    if (failCount >= 3) {
+        document.getElementById("login_btn").disabled = true;
+        statusDiv.innerText = `로그인 실패 횟수: ${failCount}회. 로그인 가능 횟수 초과.`;
+    }
+}
+
+function init(){ // 로그인 폼에 쿠키에서 가져온 아이디 입력
+    const emailInput = document.getElementById('typeEmailX');
+    const idsave_check = document.getElementById('idSaveCheck');
+    let get_id = getCookie("id");
+    
+    if(get_id) {
+        emailInput.value = get_id;
+        idsave_check.checked = true;
+    }
+    //세션 유무 검사
+    session_check();
+    // 로그인 차단 검사 추가
+    check_login_block();
+}
+
+// 로그인 횟수 증가 함수
+function login_count() {
+    let count = parseInt(getCookie("login_cnt")) || 0;
+    count += 1;
+    setCookie("login_cnt", count, 7); // 7일간 저장
+    console.log(`로그인 횟수: ${count}`);
+}
+
+// 로그아웃 횟수 증가 함수
+function logout_count() {
+    let count = parseInt(getCookie("logout_cnt")) || 0;
+    count += 1;
+    setCookie("logout_cnt", count, 7); // 7일간 저장
+    console.log(`로그아웃 횟수: ${count}`);
+}
+
 const check_xss = (input) => {
     // DOMPurify 라이브러리 로드 (CDN 사용)
     const DOMPurify = window.DOMPurify;
@@ -18,13 +93,14 @@ const check_input = () => {
     const loginBtn = document.getElementById('login_btn');
     const emailInput= document.getElementById('typeEmailX');
     const passwordInput = document.getElementById('typePasswordX');
+    // 전역 변수 추가, 맨 위 위치
+    const idsave_check = document.getElementById('idSaveCheck');
     
     const c = '아이디, 패스워드를 체크합니다';
     alert(c);
     
     const emailValue = emailInput.value.trim();
     const passwordValue = passwordInput.value.trim();
-
     const sanitizedPassword = check_xss(passwordValue);
     // check_xss 함수로 비밀번호 Sanitize
     const sanitizedEmail = check_xss(emailValue);
@@ -42,6 +118,23 @@ const check_input = () => {
 
     console.log('이메일:', emailValue);
     console.log('비밀번호:', passwordValue);
+
+    // 임시 로그인 정보 검증
+    if (emailValue !== 'minguri' || passwordValue !== 'Minguri!') {
+        alert('로그인 정보가 틀렸습니다.');
+        login_failed(); // 실패 카운트 증가
+        return false;
+    }
+
+    // 검사 마무리 단계 쿠키 저장, 최하단 submit 이전
+    if(idsave_check.checked == true) { // 체크박스가 체크상태다?
+        alert("쿠키를 저장합니다." + emailValue);
+        setCookie("id", emailValue, 1); // 쿠키생성. 1일 저장
+        alert("쿠키 값 :" + emailValue);
+    }
+    else{ // 아이디 체크 x
+        setCookie("id", emailValue, 0); //날짜를 0 - 쿠키 삭제
+    }
 
     if (emailValue.length > 10) {
         //alert('아이디는 최소 5글자 이상 입력해야합니다.');
@@ -86,8 +179,14 @@ const check_input = () => {
     // Sanitize된 비밀번호 사용
         return false;
     }
-
+    
+    session_set(); // 세션 생성
     loginForm.submit();
+
 };
+    function logout(){
+        session_del(); //세션 삭제 함수 호출
+        location.href='../index.html'
+    }
     
     document.getElementById("login_btn").addEventListener('click', check_input);
