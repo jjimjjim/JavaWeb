@@ -194,10 +194,20 @@ const check_input = () => {
     
     session_set(); // 세션 생성
     localStorage.setItem('jwt_token', jwtToken);//토큰 로컬에 저장
-    console.log("성공! 폼 제출함")
     loginForm.submit();
 
 };
+
+// function logout(){
+//         session_del(); //세션 삭제 함수 호출
+//         location.href='../index.html'
+// }
+
+// function logout() {
+//     // 로컬스토리지에서 JWT 토큰 삭제함수 호출
+//     token_del();
+//     window.location.href = '../login/login.html'; // 로그인 페이지로 리디렉션
+// } 
 
 // login.js
 function logout() {
@@ -225,29 +235,11 @@ if (loginBtn) {
     loginBtn.addEventListener('click', check_input);
 }
 
-// // DOMContentLoaded 이후 logout 버튼에 이벤트 연결
-// document.addEventListener('DOMContentLoaded', () => {
-//     init();
-//     const btn = document.getElementById('logout_btn');
-//     if (btn) {
-//         btn.addEventListener('click', logout);
-//     }
-// });
+// DOMContentLoaded 이후 logout 버튼에 이벤트 연결
 document.addEventListener('DOMContentLoaded', () => {
-  // 로그인 화면인 경우에만 init() 호출
-  if (document.getElementById('typeEmailX')) {
     init();
-  }
-
-  // 로그인 후 페이지인 경우에만 checkAuth() + init_logined() 호출
-  if (typeof isAuthenticated === 'function' && isAuthenticated()) {
-    checkAuth();
-    init_logined();
-  }
-
-  // 로그아웃 버튼(로그인 후 페이지)에만 이벤트 연결
-  const btn = document.getElementById('logout_btn');
-  if (btn) {
-    btn.addEventListener('click', logout);
-  }
+    const btn = document.getElementById('logout_btn');
+    if (btn) {
+        btn.addEventListener('click', logout);
+    }
 });

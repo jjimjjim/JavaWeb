@@ -9,14 +9,12 @@
         <meta name="author" content="학번">
         <meta name="keywords" content="computer">
         <link rel="stylesheet" href="../css/login.css">
-        <script type="text/javascript" src="../js/session.js" defer></script>       
-        <script type="text/javascript" src="../js/jwt_token.js" defer></script>
-        <script type="text/javascript" src="../js/login.js" defer></script>
+        <script type="module" src="../js/login.js" defer></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>       
-        <script type="text/javascript" src="../js/crypto.js" defer></script>
     </head>
 
-    <body class="text-center" onload="init();"></body>
+    <body class="text-center">
+      <!-- onload="init();" -->
       <section class="vh-100 gradient-custom">
         <div class="container py-5 h-100">
           <div class="row d-flex justify-content-center align-items-center h-100">
@@ -56,7 +54,7 @@
                   </div>
       
                   <div>
-                    <p class="mb-0">Don't have an account? <a href="#!" class="text-white-50 fw-bold">Sign Up</a>
+                    <p class="mb-0">Don't have an account? <a href="/login/join.html" class="text-white-50 fw-bold">Sign Up</a>
                     </p>
                   </div>
                   <div id="login_status" class="mt-3 text-warning"></div>
@@ -65,5 +63,6 @@
             </div>
           </div>
         </div>
-    </section>
+      </section>
+    </body>
 </html>
