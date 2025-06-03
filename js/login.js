@@ -88,14 +88,15 @@ const check_xss = (input) => {
     return sanitizedInput;
  };
 
+ //로그인 검증
 const check_input = () => {
+    // 전역 변수 추가, 맨 위 위치
+    const idsave_check = document.getElementById('idSaveCheck');
     const loginForm = document.getElementById('login_form');
     const loginBtn = document.getElementById('login_btn');
     const emailInput= document.getElementById('typeEmailX');
     const passwordInput = document.getElementById('typePasswordX');
-    // 전역 변수 추가, 맨 위 위치
-    const idsave_check = document.getElementById('idSaveCheck');
-    
+
     const c = '아이디, 패스워드를 체크합니다';
     alert(c);
     
@@ -106,6 +107,13 @@ const check_input = () => {
     const sanitizedEmail = check_xss(emailValue);
     // check_xss 함수로 비밀번호 Sanitize
     
+    // 전역 변수 추가, 맨 위 위치
+    const payload = {
+        id: emailValue,
+        exp: Math.floor(Date.now() / 1000) + 3600 // 1시간 (3600초)
+    };
+    const jwtToken = generateJWT(payload);
+
     if (emailValue === '') {
         alert('이메일을 입력하세요.');
         return false;
@@ -120,7 +128,7 @@ const check_input = () => {
     console.log('비밀번호:', passwordValue);
 
     // 임시 로그인 정보 검증
-    if (emailValue !== 'minguri' || passwordValue !== 'Minguri!') {
+    if (emailValue !== 'minguri' || passwordValue !== '201248') {
         alert('로그인 정보가 틀렸습니다.');
         login_failed(); // 실패 카운트 증가
         return false;
@@ -181,12 +189,52 @@ const check_input = () => {
     }
     
     session_set(); // 세션 생성
+    localStorage.setItem('jwt_token', jwtToken);//토큰 로컬에 저장
     loginForm.submit();
 
 };
-    function logout(){
-        session_del(); //세션 삭제 함수 호출
-        location.href='../index.html'
+
+// function logout(){
+//         session_del(); //세션 삭제 함수 호출
+//         location.href='../index.html'
+// }
+
+// function logout() {
+//     // 로컬스토리지에서 JWT 토큰 삭제함수 호출
+//     token_del();
+//     window.location.href = '../login/login.html'; // 로그인 페이지로 리디렉션
+// } 
+
+// login.js (또는 auth.js)
+function logout() {
+    // 1) 세션 삭제
+    if (typeof session_del === 'function') {
+        session_del();
     }
-    
-    document.getElementById("login_btn").addEventListener('click', check_input);
+    if (typeof sessionStorage !== 'undefined') {
+        sessionStorage.clear();
+    }
+
+    // 2) 로컬스토리지의 JWT 토큰 삭제
+    localStorage.removeItem('jwt_token');
+
+    alert('로그아웃 되었습니다.');
+
+    // 3) 로그인 페이지로 이동
+    window.location.href = '../login/login.html';
+}
+
+// document.getElementById("login_btn").addEventListener('click', check_input);
+// 로그인 버튼이 존재할 때만 연결
+const loginBtn = document.getElementById("login_btn");
+if (loginBtn) {
+    loginBtn.addEventListener('click', check_input);
+}
+
+// DOMContentLoaded 이후 logout 버튼에 이벤트 연결
+document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('logout_btn');
+    if (btn) {
+        btn.addEventListener('click', logout);
+    }
+});

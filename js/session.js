@@ -1,22 +1,33 @@
 function session_set() { //세션 저장
-    let session_id = document.querySelector("#typeEmailX");
-    if (sessionStorage) {
-        sessionStorage.setItem("Session_Storage_test", session_id.value);
+    let session_id = document.querySelector("#typeEmailX");//session_id 변수에 저장
+    let session_pass = document.querySelector("#typePasswordX"); // DOM 트리에서 pass 검색
+    if (sessionStorage) {// 웹 브라우저가 sessionStorage를 지원하는지?
+        let en_text = encrypt_text(session_pass.value);//비밀번호 입력값을 encrypt_text() 함수로 암호화
+        sessionStorage.setItem("Session_Storage_test", session_id.value);//사용자 이메일을 저장s
+        sessionStorage.setItem("Session_Storage_pass", en_text);//암호화된 비밀번호 저장
     } else {
         alert("로컬 스토리지 지원 x");
     }
 }
 function session_get() { //세션 읽기
     if (sessionStorage) {
-        return sessionStorage.getItem("Session_Storage_test");
+        return sessionStorage.getItem("Session_Storage_pass");
     } else {
         alert("세션 스토리지 지원 x");
+    }   
+}
+
+function init_logined(){
+    if(sessionStorage){
+        decrypt_text(); // 복호화 함수
     }
-    
+    else{
+        alert("세션 스토리지 지원 x");
+    }
 }
 
 function session_check() { //세션 검사
-    if (sessionStorage.getItem("Session_Storage_test")) {
+    if (sessionStorage.getItem("Session_Storage_id")) {
         alert("이미 로그인 되었습니다.");
         location.href='../login/index_login.html'; // 로그인된 페이지로 이동
     }
