@@ -1,7 +1,7 @@
-import { save_signup_session,load_signup_session } from './session.js';
+import { signup_session_set, signup_session_get } from './session.js';
 
 window.onload = function() {
-    load_signup_session(); // 로그인 시 세션 복호화해서 콘솔 출력
+    signup_session_get(); // 로그인 시 세션 복호화해서 콘솔 출력
 };
 
 function join(){ // 회원가입기능
@@ -49,8 +49,7 @@ function join(){ // 회원가입기능
     }
     else{// 회원가입 정보 객체 생성
         const newSignUp = new SignUp(name.value, email.value, password.value, re_password.value); 
-        //session_set(newSignUp); // 세션저장 및 객체전달
-        save_signup_session(newSignUp); // 회원가입 정보 세션 저장
+        signup_session_set(newSignUp); // 회원가입 정보 세션 저장
         // form.submit(); // 폼 실행
         alert("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.");
         window.location.href = "../login/login.html"; // 로그인 페이지로 이동

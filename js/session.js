@@ -1,24 +1,28 @@
 import { encrypt_text, decrypt_text } from './crypto.js';
 
 // 회원가입 정보 세션에 암호화 저장
-export function save_signup_session(signupObj) {
+export function signup_session_set(signupObj) {
     if (sessionStorage) {
         const userInfo = signupObj.getUserInfo();
         const jsonStr = JSON.stringify(userInfo);
         const encrypted = encrypt_text(jsonStr);
-        sessionStorage.setItem("SignUp_Info", encrypted);  // 회원가입용 세션 키
+        //sessionStorage.setItem("signup_info", encrypted);  // 회원가입용 세션 키
+        // 세션은 회원가입 정보가 로그아웃과 동시에 사라져서 로컬스토리지 사용
+        localStorage.setItem("signup_info", encrypted);  
     } else {
         alert("세션 스토리지를 지원하지 않습니다.");
     }
 }
 
-// 로그인 후 복호화 → 콘솔 출력
-export function load_signup_session() {
-    const data = sessionStorage.getItem("SignUp_Info");
+//로그인 후 복호화 → 콘솔 출력
+export function signup_session_get() {
+    //const data = sessionStorage.getItem("signup_info");
+    const data = localStorage.getItem("signup_info");
     if (data) {
         const decrypted = decrypt_text(data);
         const userInfo = JSON.parse(decrypted);
         console.log("복호화된 회원가입 정보:", userInfo);
+        return userInfo;  // 이 줄 추가해서 login에서 userInfo 쓰게 하기
     } else {
         console.log("회원가입 세션 정보가 없습니다. 출력하지 않습니다.");
     }

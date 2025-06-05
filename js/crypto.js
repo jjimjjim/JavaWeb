@@ -27,10 +27,28 @@ export function encrypt_text(password){
     console.log(eb);
 }
 
-export function decrypt_text(){
-    const k = "key"; // 서버의 키
-    const rk = k.padEnd(32, " "); // AES256은 key 길이가 32
-    const eb = session_get();
-    const b = decodeByAES256(rk, eb); // 실제 복호화
-    console.log(b); 
+// export function decrypt_text(){
+//     const k = "key"; // 서버의 키
+//     const rk = k.padEnd(32, " "); // AES256은 key 길이가 32
+//     const eb = session_get();
+//     const b = decodeByAES256(rk, eb); // 실제 복호화
+//     console.log(b); 
+// }
+
+export function decrypt_text(encrypted){
+    const k = "key";
+    const rk = k.padEnd(32, " ");
+    
+    if (!encrypted) {
+        console.error("복호화할 데이터가 null입니다.");
+        return null;
+    }
+
+    try {
+        const decrypted = decodeByAES256(rk, encrypted);
+        return decrypted;
+    } catch (e) {
+        console.error("복호화 중 오류 발생:", e);
+        return null;
+    }
 }

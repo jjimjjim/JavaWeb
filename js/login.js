@@ -1,6 +1,10 @@
-import { session_set, session_get, session_check } from './session.js';
+import { session_set, session_get, session_check, signup_session_get } from './session.js';
 import { encrypt_text, decrypt_text } from './crypto.js';
 import { generateJWT, checkAuth } from './jwt_token.js';
+
+// // 세션에서 회원가입 정보를 가져와 userInfo로 설정
+// const storedUser = signup_session_get();
+// const userInfo = storedUser ? storedUser.getUserInfo() : null;
 
 // 전역 쿠키 설정 함수 (이미 정의되어 있던 코드)
 function setCookie(name, value, days) {
@@ -103,6 +107,8 @@ const check_input = () => {
 
     const c = '아이디, 패스워드를 체크합니다';
     alert(c);
+
+    const userInfo = signup_session_get();// userinfo
     
     const emailValue = emailInput.value.trim();
     const passwordValue = passwordInput.value.trim();
@@ -130,9 +136,13 @@ const check_input = () => {
 
     console.log('이메일:', emailValue);
     console.log('비밀번호:', passwordValue);
-
+    
+    if (!userInfo) {
+        alert("회원가입 정보가 없습니다. 회원가입을 먼저 해주세요.");
+        return;
+    }
     // 임시 로그인 정보 검증
-    if (emailValue !== 'minguri' || passwordValue !== '201248') {
+    if (emailValue !== userInfo.email || passwordValue !== userInfo.password) {
         alert('로그인 정보가 틀렸습니다.');
         login_failed(); // 실패 카운트 증가
         return false;
@@ -148,26 +158,26 @@ const check_input = () => {
         setCookie("id", emailValue, 0); //날짜를 0 - 쿠키 삭제
     }
 
-    if (emailValue.length > 10) {
-        //alert('아이디는 최소 5글자 이상 입력해야합니다.');
-        alert('아이디는 최대 10글자 미만 입력해야합니다.');
-        return false;
-    }
-    if (passwordValue.length > 15) {
-        alert('비밀번호는 반드시 15글자 미만 입력해야합니다.');
-        return false;
-    }
-    // const hasSpecialChar = passwordValue.match(/[!,@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+/) !== null;
-    // if (!hasSpecialChar) {
-    //     alert('패스워드는 특수문자를 1개 이상 포함해야합니다.');
+    // if (emailValue.length > 10) {
+    //     //alert('아이디는 최소 5글자 이상 입력해야합니다.');
+    //     alert('아이디는 최대 10글자 미만 입력해야합니다.');
     //     return false;
     // }
-    // const hasUpperCase = passwordValue.match(/[A-Z]+/) !== null;
-    // const hasLowerCase = passwordValue.match(/[a-z]+/) !== null;
-    // if (!hasUpperCase || !hasLowerCase) {
-    //     alert('패스워드는 대소문자를 1개 이상 포함해야합니다.');
+    // if (passwordValue.length > 15) {
+    //     alert('비밀번호는 반드시 15글자 미만 입력해야합니다.');
     //     return false;
     // }
+    const hasSpecialChar = passwordValue.match(/[!,@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+/) !== null;
+    if (!hasSpecialChar) {
+        alert('패스워드는 특수문자를 1개 이상 포함해야합니다.');
+        return false;
+    }
+    const hasUpperCase = passwordValue.match(/[A-Z]+/) !== null;
+    const hasLowerCase = passwordValue.match(/[a-z]+/) !== null;
+    if (!hasUpperCase || !hasLowerCase) {
+        alert('패스워드는 대소문자를 1개 이상 포함해야합니다.');
+        return false;
+    }
 
     // 3글자 이상 반복 체크 (예: abcabc)
     const repeatPattern = /(.{3,})\1+/;
